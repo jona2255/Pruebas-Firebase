@@ -3,13 +3,19 @@ package com.example.pruebas_firebase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.homeFragment, R.id.profileFragment, R.id.signOutFragment)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -53,7 +59,27 @@ public class MainActivity extends AppCompatActivity {
                 .setPersistenceEnabled(false)
                 .build());
 
+        // Auth
+        View header = navigationView.getHeaderView(0);
+        final ImageView photo = header.findViewById(R.id.photoImageView);
+        final TextView name = header.findViewById(R.id.displayNameTextView);
+        final TextView email = header.findViewById(R.id.emailTextView);
 
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if(user != null){
+                    Glide.with(MainActivity.this)
+                            .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString())
+                            .circleCrop()
+                            .into(photo);
+                    name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                    email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                }
+            }
+        });
     }
 
     @Override
