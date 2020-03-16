@@ -1,5 +1,7 @@
 package com.example.pruebas_firebase;
 
+import android.net.Uri;
+
 public class Post {
     public String uid;
     public String author;
@@ -7,7 +9,6 @@ public class Post {
     public String content;
 
     // Constructor vacio requerido por Firestore
-    public Post() {}
 
     public Post(String uid, String author, String authorPhotoUrl, String content) {
         this.uid = uid;
@@ -16,5 +17,5 @@ public class Post {
         this.content = content;
     }
 
-
+    public Post(){}
 }

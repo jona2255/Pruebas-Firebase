@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,8 @@ public class NewPostFragment extends Fragment {
 
     Button publishButton;
     EditText postConentEditText;
+
+    Post post;
 
     public NewPostFragment() {
         // Required empty public constructor
@@ -70,6 +73,7 @@ public class NewPostFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -110,14 +114,20 @@ public class NewPostFragment extends Fragment {
     private void guardarEnFirestore(String postContent) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Post post = new Post(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), postContent);
+
+        if (user.getPhotoUrl()==null){
+            post = new Post(user.getUid(), user.getEmail(), "", postContent);
+        }else {
+            post = new Post(user.getUid(), user.getEmail(), user.getPhotoUrl().toString(), postContent);
+        }
 
         FirebaseFirestore.getInstance().collection("posts")
                 .add(post)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        navController.popBackStack();
+                        Toast toast = Toast.makeText(getContext(),"Añadido Correctamente",Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 });
     }

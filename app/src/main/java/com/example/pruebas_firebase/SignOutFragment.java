@@ -78,10 +78,6 @@ public class SignOutFragment extends Fragment {
 
         navController = Navigation.findNavController(view);  // <-----------------
 
-        GoogleSignIn.getClient(requireActivity(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .build()).signOut();
-
         FirebaseAuth.getInstance().signOut();
 
         Navigation.findNavController(view).navigate(R.id.signInFragment);
