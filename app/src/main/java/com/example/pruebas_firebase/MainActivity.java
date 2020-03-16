@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore.getInstance().setFirestoreSettings(new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
                 .build());
-
-
     }
 
 
